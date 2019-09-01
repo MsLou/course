@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>新闻动态</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/swiper.min.css">
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="/css/element_ui.css">
+  <style>
+    .filter-content input {
+      width: 500px;
+    }
+    .filter-title input {
+      width: 400px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <%- include('temp-head') %>
+    <div class="content cent clearfix">
+      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="标题搜索" class="filter-title">
+          <el-input v-model="formInline.title" placeholder="请输入标提搜索"></el-input>
+        </el-form-item>
+        <el-form-item label="发布人">
+          <el-input v-model="formInline.create_name" placeholder="请输入发布人"></el-input>
+        </el-form-item>
+        <el-form-item label="发布时间">
+          <el-date-picker
+            v-model="formInline.date"
+            align="right"
+            type="date"
+            placeholder="选择日期"
+            :picker-options="pickerOptions1">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="内容搜索" class="filter-content">
+          <el-input v-model="formInline.content" placeholder="请输入内容搜索"></el-input>
+        </el-form-item>
+        
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">查询</el-button>
+        </el-form-item>
+      </el-form>
+      <el-table
+        :data="tableData"
+        stripe
+        border
+        style="width: 100%">
+        <el-table-column
+          label="序号"
+          type="index"
+          width="50">
+        </el-table-column>
+        <el-table-column
+          prop="title"
+          label="发布标题"
+          width="250">
+        </el-table-column>
+        <el-table-column
+          prop="content"
+          label="发布内容"
+          width="518">
+          <template slot-scope="scope">
+            <a href="javascript:;" @click="openFileInfo(scope.row.id)">{{scope.row.content}}</a>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="path"
+          width="100"
+          label="发布路径">
+        </el-table-column>
+        <el-table-column
+          prop="create_name"
+          label="发布人"
+          width="100">
+        </el-table-column>
+        <el-table-column
+          prop="date"
+          width="180"
+          label="发布时间">
+        </el-table-column>
+      </el-table>
+      <div class="pagination" v-if="total > 0">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page.sync="currentPage2"
+          :page-sizes="[1, 5, 10, 20]"
+          :page-size="pageSize"
+          layout="sizes, prev, pager, next"
+          :total="total">
+        </el-pagination>
+      </div>
+      <div class="file-view cent" id="fileView" style="display: none;"></div>
+    </div>
+  </div>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/vue.min.js"></script>
+  <!-- 引入组件库 -->
+  <script src="/js/element_ui.js"></script>
+  <script>
+    function getUrlVars(url) {
+      var hash;
+      var myJson = {};
+      var hashes = url.slice(url.indexOf('?') + 1).split('&');
+      for (var i = 0; i < hashes.length; i++) {
+          hash = hashes[i].split('=');
+          myJson[hash[0]] = hash[1];
+      }
+      return myJson;
+    }
+    var urlObj = getUrlVars(window.location.href)
+    var app = new Vue({
+      el: '#app',
+      data: {
+        pickerOptions1: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        },
+        shortcuts: [{
+          text: '今天',
+          onClick(picker) {
+            picker.$emit('pick', new Date());
+          }
+        }, {
+          text: '昨天',
+          onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24);
+            picker.$emit('pick', date);
+          }
+        }, {
+          text: '一周前',
+          onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', date);
+          }
+        }]
+      },
+      value1: '',
+      value2: '',
+      formInline: {
+        title: '',
+        create_name: '',
+        date: '',
+        content: ''
+      },
+      total: 0,
+      currentPage2: 1,
+      pageSize: 10,
+      tableData: [],
+      total: 0
+    },
+    created: function () {
+      this.getTableData();
+      if (urlObj.id) {
+        this.openFileInfo(urlObj.id)
+      }
+    },
+    methods: {
+      // 获取文件信息
+      openFileInfo (id) {
+        $.ajax({
+          url: '/getFileInfo',
+          type: 'GET',
+          data: {
+            id: id
+          },
+          dataType: 'json',
+          success: res => {
+            var container = document.getElementById('fileView');
+            container.innerHTML = '';
+            container.style.display = 'block';
+            if (typeof res.data == 'string') {
+              var fileName = res.data
+              if(/\.pdf$/.test(fileName)) {
+                window.open('/uploads/' + fileName)
+              } else {
+                container.innerHTML = res.data
+              }
+            } else {
+              var fileType = res.data.type, fileName = res.data.name
+              if (/\.jpg$|\.png$/.test(fileName)) {
+                fileName.split(',').forEach(function (url) {
+                  var img = document.createElement('img')
+                  img.src = '/uploads/' + url;
+                  container.appendChild(img)
+                })
+              }
+            }
+          },
+          error: () => {}
+        })
+      },
+      // 获取列表
+      getTableData (currentPage, pageSize, formInline) {
+        var self = this;
+        var parmas = {
+          type: 1,
+          data: {},
+          page: currentPage || 1,
+          size: pageSize || self.pageSize
+        }
+        if (formInline) {
+          parmas.data.title = formInline.title;
+          parmas.data.create_name = formInline.create_name;
+          parmas.data.date = formInline.date;
+          parmas.data.content = formInline.content;
+        }
+        $.ajax({
+          url: '/getData',
+          type: 'GET',
+          data: parmas,
+          dataType: 'json',
+          success: function (res) {
+            self.tableData = res.data.map(item => {
+              var date = new Date(Number(item.date));
+              item.date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+              self.total = Math.floor(item.date.length / self.pageSize);
+              return item;
+            })
+            self.total = res.total;
+          },
+          error: function () {}
+        })
+      },
+      onSubmit() {
+        var formInline = this.formInline;
+        this.getTableData(this.currentPage2, this.pageSize, {
+          title: formInline.title,
+          create_name: formInline.create_name,
+          date: formInline.date,
+          content: formInline.content
+        });
+      },
+      handleSizeChange(val) {
+        this.getTableData(this.currentPage2, val)
+        this.pageSize = val;
+      },
+      handleCurrentChange(val) {
+        this.getTableData(val, this.pageSize)
+      }
+    }
+  })
+  </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+body,html,.login {
+	height: 100%;
+}
+body {
+	margin: 0 !important;
+}
+.login {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	z-index: 99;
+}
+.login-inner {
+	width: 450px;
+	height: 500px;
+	background-color: #fff;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -225px;
+	margin-top: -250px;
+	box-shadow: 2px 4px 6px #afa8a8;
+}
+.login-inner h2 {
+	padding: 50px 10px 10px 10px;
+	font-size: 34px;
+}
+.login-inner .login-text {
+	padding: 0 10px 10px 10px;
+	font-size: 14px;
+}
+.login-inner form {
+	margin: 10px;
+}
+.login-inner form .form-attr {
+	padding: 10px 0;
+}
+.login-inner form .form-input {
+	position: relative;
+	height: 34px;
+}
+
+.login-inner form .form-input input {
+	width: 100%;
+	height: 34px;
+	text-indent: 5px;
+	border: 1px solid #ddd;
+	outline: none;
+	
+}
+
+.login-inner form .form-submit {
+	margin-top: 10px;
+}
+.login-inner form .form-submit button {
+	float: right;
+	line-height: 34px;
+    min-width: 88px;
+    background: #4285f4;
+    color: #fff;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+    transition: box-shadow .28s cubic-bezier(0.4,0.0,0.2,1);
+    display: inline-block;
+    border: 0;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    text-transform: uppercase;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 0;
+}
+
+
+.VYMape {
+    background: #fff;
+    bottom: 0;
+    direction: ltr;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
+}
+.VYMape svg {
+    display: none;
+    height: 100%;
+    position: relative;
+    width: 100%;
+}
+@media (min-width: 601px) {
+	.VYMape svg {
+	    display: block;
+	}
+}

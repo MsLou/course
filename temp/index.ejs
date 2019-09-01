@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>电磁隐身与超材料应用课题组</title>
+	<link rel="stylesheet" href="/css/common.css">
+	<link rel="stylesheet" href="/css/swiper.min.css">
+	<style>
+		.swiper-button-next {
+			background-image: url('/images/pre.png');
+			width: 30px;
+			height: 75px;
+			background-position: right top;
+			background-size: auto;
+		}
+		.swiper-button-prev {
+			background-image: url('/images/pre.png');
+			width: 30px;
+			height: 75px;
+			background-position: left top;
+			background-size: auto;
+		}
+	</style>
+</head>
+<body>
+	<div class="app" id="app" style="display: none;">
+		<%- include('temp-head') %>
+		<div class="content">
+			<div class="banner cent clearfix">
+				<div class="swiper-container">
+				    <div class="swiper-wrapper" id="swiper-view">
+				    </div>
+				    <!-- Add Pagination -->
+					<div class="swiper-pagination"></div>
+					<div class="swiper-button-next"></div>
+    				<div class="swiper-button-prev"></div>
+				  </div>
+			</div>
+			<div class="new cent clearfix">
+				<div class="new-left">
+					<p class="title">Welcome to visit</p>
+					<p class="text">最近更新<br>Recently updated</p>
+					<img src="/images/u2636.png" alt="">
+				</div>
+				<div class="new-cent" id="newInfo">
+				</div>
+				<div class="new-right">
+					<p class="title">
+						<span>通知公告</span> &nbsp;&nbsp;&nbsp;NOTICE
+					</p>
+					<div id="newNotice">
+						
+					</div>
+					
+					<span class="line"></span>
+				</div>
+			</div>
+			<div class="block cent clearfix">
+				<div class="list">
+					<div class="item">
+						<img src="/images/1.jpg" alt="">
+						<p class="title">课题组概况</p>
+						<p class="text">About our research group</p>
+						<a href="/course"><button>Read More</button></a>
+					</div>
+					<div class="item">
+						<img src="/images/2.jpg" alt="">
+						<p class="title">新闻动态</p>
+						<p class="text">News & Events</p>
+						<a href="/new"><button>Read More</button></a>
+					</div>
+					<div class="item">
+						<img src="/images/3.jpg" alt="">
+						<p class="title">基金项目</p>
+						<p class="text">Funds</p>
+						<a href="/project"><button>Read More</button></a>
+					</div>
+					<div class="item">
+						<img src="/images/4.jpg" alt="">
+						<p class="title">学术成果</p>
+						<p class="text">Publications</p>
+						<a href="/achievements"><button>Read More</button></a>
+					</div>
+					<div class="item">
+						<img src="/images/5.jpg" alt="">
+						<p class="title">文娱体育</p>
+						<p class="text">Entertainment</p>
+						<a href="/sports"><button>Read More</button></a>
+					</div>
+					<div class="item">
+						<img src="/images/6.jpg" alt="">
+						<p class="title">资源共享</p>
+						<p class="text">Resources</p>
+						<a href="/resources"><button>Read More</button></a>
+					</div>
+				</div>
+				<div class="right">
+					<div class="weather">
+						<p class="weather-city">南京</p>
+						<p class="weather-date">{{weatherInfo.date}}</p>
+						<p class="weather-num">{{weatherInfo.tmp}}℃</p>
+						<p class="weather-other">
+							{{weatherInfo.cond_txt}}&nbsp;|&nbsp;{{weatherInfo.wind_dir}}{{weatherInfo.wind_sc}}级&nbsp;|&nbsp;湿度：{{weatherInfo.hum}}%
+						</p>
+					</div>
+					<div class="right-img">
+						<a href="https://mail.nuaa.edu.cn/coremail/index.jsp"><img src="/images/u2626.png" alt=""></a>
+						<a href="http://jgdw.nuaa.edu.cn/fwzn/list.htm"><img src="/images/u2628.png" alt="" style="width: 64px;"></a><br>
+						<a href="http://map.baidu.com/?newmap=1&s=con%26wd%3D%E5%8D%97%E4%BA%AC%E8%88%AA%E7%A9%BA%E8%88%AA%E5%A4%A9%E5%A4%A7%E5%AD%A6%E7%94%B5%E5%AD%90%E4%BF%A1%E6%81%AF%E5%B7%A5%E7%A8%8B%E5%AD%A6%E9%99%A2%26c%3D315&from=alamap&tpl=mapdots"><img src="/images/u2630.png" alt=""></a>
+						<a href="https://worktile.com/signin"><img src="/images/u2632.png" alt=""></a>
+					</div>
+				</div>
+			</div>
+			<!-- <div class="foot clearfix">
+				<div class="cent">
+					<div class="left">
+						<p>友情链接</p>
+						<div class="left-link">
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+							<a href="#"></a>
+						</div>
+					</div>
+					<div class="center clearfix">
+						<a href="#">国家自然科学基金委</a>
+						<a href="#">南京航空大学</a>
+						<a href="#">江苏省自然科学基金委</a>
+						<a href="#">南航图书馆</a>
+						<a href="#">国家留学基金委</a>
+						<a href="#">南航研究生院</a>
+						<a href="#">南航电子信息工程学院</a>
+					</div>
+					<div class="right">
+						<span class="ewm"></span>
+					</div>
+				</div>
+			</div> -->
+		</div>
+	</div>
+	<!-- Swiper JS -->
+  	<script src="/js/jquery.min.js"></script>
+	<script src="/js/swiper.min.js"></script>
+	<script src="/js/vue.min.js"></script>
+  	<!-- Initialize Swiper -->
+	<script>
+	;(function () {
+		function getBanner () {
+			$.ajax({
+				url: '/getBanner',
+				type: 'GET',
+				dataType: 'json',
+				success: function (res) {
+					var str = ''
+					for (var i = 0; i < res.data.length; i++) {
+						if (!res.data[i].url) continue;
+						str += '<div class="swiper-slide"><img src="/uploads/' + res.data[i].url + '"></div>'
+					}
+					$('#swiper-view').html(str)
+					setTimeout(function () {
+						var swiper = new Swiper('.swiper-container', {
+							autoplay: {
+								delay: 3000
+							},
+							loop: true,
+							navigation: {
+								nextEl: '.swiper-button-next',
+								prevEl: '.swiper-button-prev',
+								
+							},
+							
+							
+							pagination: {
+								el: '.swiper-pagination',
+								clickable: true,
+							}
+						});
+					}, 200)
+				}
+			})
+		}
+		function formatDate (num) {
+			var d = new Date(Number(num));
+			return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+		}
+		function getRecentlyFile () {
+			$.ajax({
+				url: '/getRecentlyFile',
+				type: 'GET',
+				dataType: 'json',
+				success: function (res) {
+					var frag = document.createDocumentFragment();
+
+					for (var i = 0; i < res.data.length; i++) {
+						var pathUrl = '';
+						var item = res.data[i]
+						var div = document.createElement('div')
+						switch(res.data[i].path) {
+							case '基金项目':
+								pathUrl = '/project'
+								break;
+							case '课题组概况':
+								pathUrl = '/course'
+								break;
+							case '新闻动态':
+								pathUrl = '/new'
+								break;
+							case '学术成果':
+								pathUrl = '/achievements'
+								break;
+							case '文娱体育':
+								pathUrl = '/sports'
+								break;
+							case '资源共享':
+								pathUrl = '/resources'
+								break;
+						}
+						(function (id, item) {
+							div.onclick = function () {
+								
+								openFileInfo(id, item)
+							}
+						})(item.id, item)
+						div.innerHTML = '<p class="title">' + res.data[i].title + '</p><p class="date">' + formatDate(res.data[i].date) + '</p><p class="text">' + res.data[i].content + '</p>'
+						frag.appendChild(div)
+					}
+					$('#newInfo').append(frag)
+					
+				}
+			})
+		}
+		// 获取文件信息
+		function openFileInfo (id, item) {
+			$.ajax({
+			url: '/getFileInfo',
+			type: 'GET',
+			data: {
+				id: id
+			},
+			dataType: 'json',
+			success: res => {
+				if(/\.pdf$/.test(res.data)) {
+					window.open('/uploads/' + res.data)
+				} else {
+					var url = '';
+					switch(item.path) {
+						case '基金项目':
+							url = '/project'
+							break;
+						case '课题组概况':
+							url = '/course'
+							break;
+						case '新闻动态':
+							url = '/new'
+							break;
+						case '学术成果':
+							url = '/achievements'
+							break;
+						case '文娱体育':
+							url = '/sports'
+							break;
+						case '资源共享':
+							url = '/resources'
+							break;
+						// case '0':
+						// 	url = '/course'
+						// 	break;
+						// case '1':
+						// 	url = '/new'
+						// 	break;
+						// case '2':
+						// 	url = '/achievements'
+						// 	break;
+						// case '3':
+						// 	url = '/project'
+						// 	break;
+						// case '4':
+						// 		url = '/sports'
+						// 	break;
+						// case '5':
+						// 	url = '/resources'
+						// 	break;
+							
+					}
+					window.location.href = url + '?id=' + id
+				}
+			},
+			error: () => {}
+			})
+		}
+		var app = new Vue({
+			el: '#app',
+			data: {
+				weatherInfo: {
+					date: '',
+					tmp: '',
+					cond_txt: '',
+					wind_dir: '',
+					wind_sc: '',
+					hum: '',
+				},
+			},
+			created:function () {
+				document.getElementById('app').style.display = 'block'
+				getBanner();
+				getRecentlyFile();
+				this.getData();
+				this.getWeather();
+			},
+			methods: {
+				getWeather: function () {
+					var self = this;
+					$.ajax({
+						url: 'https://free-api.heweather.net/s6/weather/now?location=CN101190101&key=400dac6a90a445958c69a35bbb13d563',
+						type: 'GET',
+						success: function (result) {
+							console.log(result.HeWeather6[0].now)
+							var date = new Date()
+							self.weatherInfo = result.HeWeather6[0].now
+							self.weatherInfo.date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+						}
+					})
+				},
+				getData: function () {
+					$.ajax({
+						url: '/getData',
+						type: 'GET',
+						data: {
+							type: 6,
+							page: 1,
+							size: 5
+						},
+						dataType: 'json',
+						success: function (res) {
+							if(res.data.length > 0) {
+								var frag = document.createDocumentFragment()
+								res.data.forEach(function (item) {
+									var p = document.createElement('p')
+									p.classList.add('text')
+									p.innerHTML = item.title;
+									(function (id, item) {
+										p.onclick = function () {
+											if (item.path === '通知公告') {
+												
+											}
+											openFileInfo(id, item)
+										}
+									})(item.id, item)
+									
+									frag.appendChild(p)
+								})
+								$('#newNotice').append(frag);
+							}
+						},
+						error: function () {}
+					})
+				},
+			},
+		})
+	})()
+	
+	</script>
+</body>
+</html>
